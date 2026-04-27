@@ -65,6 +65,9 @@ int main(){
         printf("%d ", sorted_list[i]);
     }
     printf("\n");
+    
+    free(data_0); 
+    free(data_1);
 
     return 0;
 }
