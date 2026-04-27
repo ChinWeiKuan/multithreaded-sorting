@@ -93,7 +93,7 @@ int PARTITION(int arr[], int left, int right){
        // print_range("Range before final swap", arr,left,right);
         
     }
-    
+    swap(&arr[i+1], &arr[right]);
    // printf("[Check B] Pivot swapped to index %d\n", i + 1);
    // print_range("Range after final swap", arr, left, right);
     
