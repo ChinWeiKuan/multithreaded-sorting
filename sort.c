@@ -124,19 +124,14 @@ void MEDIAN3_QUICKSORT(int arr[],int left, int right){
 }
 // Quicksort
 void *sorter(void *params) {
-    parameters *p = (parameters *)params;
+    
+    parameters *p=(parameters *)params;
+    
     int left,right=0;
     left=p->start_idx;
     right=p->end_idx;
     
-    MEDIAN3_QUICKSORT(original_list, left,right);
-   
-    
-    
-    
-    // TODO: sort original_list by using from p->start_idx to p->end_index
-    // You can choose any sorting algorithm prefered
-    
+    MEDIAN3_QUICKSORT(original_list, left,right);    
     pthread_exit(0);
 }
 
@@ -144,7 +139,32 @@ void *sorter(void *params) {
 
 void *merger(void *params) {
     // TODO: merge original_list and store the result into sorted_list
+    int size = sizeof(original_list)/sizeof((original_list[0]));
+    int i=0;
+    int j=(size/2);
+    int k=0;
     
+    while (i<size/2 && j<size){
+        if (original_list[i]<=original_list[j]){
+            sorted_list[k]=original_list[i];
+            i++;
+        }else{
+            sorted_list[k]=original_list[j];
+            j++;
+        }
+        k++;
+    }
+    while (i<size/2){
+        sorted_list[k]=original_list[i];
+        i++;
+        k++;
+    }
+    while (j<size){
+        sorted_list[k]=original_list[j];
+        j++;
+        k++;
+    }
+
     pthread_exit(0);
 }
 
