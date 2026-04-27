@@ -73,7 +73,7 @@ int main(){
 void swap(int *a, int *b){
     int temp=0;
     temp=*a;
-    *b=*a;
+    *a=*b;
     *b=temp;
 }
 
@@ -89,12 +89,13 @@ int PARTITION(int arr[], int left, int right){
             i++;
             swap(&arr[i],&arr[j]);
         }
-        printf("[Check A]Loop finished. Pivot value is %d\n",x);
-        print_range("Range before final swap", arr,left,right);
-        swap(&arr[i+1],&arr[right]);
+        //printf("[Check A]Loop finished. Pivot value is %d\n",x);
+       // print_range("Range before final swap", arr,left,right);
+        
     }
-    printf("[Check B] Pivot swapped to index %d\n", i + 1);
-    print_range("Range after final swap", arr, left, right);
+    
+   // printf("[Check B] Pivot swapped to index %d\n", i + 1);
+   // print_range("Range after final swap", arr, left, right);
     
     return i+1;
 }
