@@ -23,6 +23,10 @@ typedef struct{
     int end_idx;
 } parameters;
 
+
+void *sorter(void *params);
+void *merger(void *params);
+
 int main(){
     // Initialization
     pthread_t tid_0, tid_1, tid_merge;
@@ -61,21 +65,117 @@ int main(){
         printf("%d ", sorted_list[i]);
     }
     printf("\n");
+    
+    free(data_0); 
+    free(data_1);
 
     return 0;
 }
 
+
+void swap(int *a, int *b){
+    int temp=0;
+    temp=*a;
+    *a=*b;
+    *b=temp;
+}
+
+void print_range(char *msg, int arr[], int left, int right);
+
+int PARTITION(int arr[], int left, int right){
+    int x,i=0;
+    x=arr[right];
+    i=left-1;
+    
+    for(int j=left;j<right;j++){
+        if (arr[j]<=x){
+            i++;
+            swap(&arr[i],&arr[j]);
+        }
+        //printf("[Check A]Loop finished. Pivot value is %d\n",x);
+       // print_range("Range before final swap", arr,left,right);
+        
+    }
+    swap(&arr[i+1], &arr[right]);
+   // printf("[Check B] Pivot swapped to index %d\n", i + 1);
+   // print_range("Range after final swap", arr, left, right);
+    
+    return i+1;
+}
+
+int MEDIAN3_PARTITION(int arr[], int left , int right){
+    int mid = left+(right-left)/2;
+    // Sorting arr[left],arr[mid],arr[right]
+    if (arr[left]>arr[mid]) swap(&arr[left],&arr[mid]);
+    if (arr[left]>arr[right]) swap(&arr[left],&arr[right]);
+    if (arr[mid]>arr[right]) swap(&arr[mid],&arr[right]);
+    
+    swap(&arr[mid],&arr[right]);
+    
+    return PARTITION(arr,left,right);
+ 
+}
+
+void MEDIAN3_QUICKSORT(int arr[],int left, int right){
+    int mid=0;
+    if (left<right){
+        mid=MEDIAN3_PARTITION(arr, left ,right);
+        MEDIAN3_QUICKSORT(arr,left,mid-1);
+        MEDIAN3_QUICKSORT(arr,mid+1,right);
+    }
+    return; 
+}
+// Quicksort
 void *sorter(void *params) {
-    parameters *p = (parameters *)params;
     
-    // TODO: sort original_list by using from p->start_idx to p->end_index
-    // You can choose any sorting algorithm prefered
+    parameters *p=(parameters *)params;
     
+    int left,right=0;
+    left=p->start_idx;
+    right=p->end_idx;
+    
+    MEDIAN3_QUICKSORT(original_list, left,right);    
     pthread_exit(0);
 }
 
+
+
 void *merger(void *params) {
     // TODO: merge original_list and store the result into sorted_list
+    int size = sizeof(original_list)/sizeof((original_list[0]));
+    int i=0;
+    int j=(size/2);
+    int k=0;
     
+    while (i<size/2 && j<size){
+        if (original_list[i]<=original_list[j]){
+            sorted_list[k]=original_list[i];
+            i++;
+        }else{
+            sorted_list[k]=original_list[j];
+            j++;
+        }
+        k++;
+    }
+    while (i<size/2){
+        sorted_list[k]=original_list[i];
+        i++;
+        k++;
+    }
+    while (j<size){
+        sorted_list[k]=original_list[j];
+        j++;
+        k++;
+    }
+
     pthread_exit(0);
+}
+
+
+void print_range(char *msg, int arr[], int left, int right){
+    printf("%s: ",msg);
+    for (int i=left;i<=right;i++){
+        printf("%d ",arr[i]);
+    }
+    printf("\n");
 }
